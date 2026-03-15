@@ -1,28 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# -------------------------------------------------------------------
+# Library: env.sh
+# Purpose: load configuration values from .env.example and .env.
+# -------------------------------------------------------------------
+
 TOOLKIT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Load .env.example first to ensure all variables are defined, then override with .env if it exists.
 load_env() {
-  if [[ -f "$TOOLKIT_ROOT/.env.example" ]]; then
-    set -a
-    # shellcheck disable=SC1091
-    source "$TOOLKIT_ROOT/.env.example"
-    set +a
-  fi
 
+  # Do this first: load base settings from .env.example
+  set -a
+  # shellcheck disable=SC1091
+  source "$TOOLKIT_ROOT/.env.example"
+  set +a
+
+  # Then override with .env if it exists
   if [[ -f "$TOOLKIT_ROOT/.env" ]]; then
     set -a
     # shellcheck disable=SC1091
     source "$TOOLKIT_ROOT/.env"
     set +a
   fi
-
-  : "${WORKSPACE_DIR:=../}"
-  : "${PUBLIC_BASE_BRANCH:=develop}"
-  : "${LOCAL_SUFFIX:=@local}"
-  : "${LOCAL_COMMENT_PATTERN:=^[[:space:]]*//[[:space:]]*@local([[:space:]]|$)}"
-  : "${SYNC_MERGE_MESSAGE_TEMPLATE:=[SYNC] merge '%s' into '%s'}"
-  : "${FEATURE_MERGE_MESSAGE_TEMPLATE:=[FEATURE] merge '%s' into '%s'}"
-  : "${HOOK_CHECK_MARKER:=# local-comments-workflow}"
+  
 }
+

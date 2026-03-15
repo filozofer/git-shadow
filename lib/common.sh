@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# -------------------------------------------------------------------
+# Library: common.sh
+# Purpose: shared utilities for paths and Git repository sanity checks.
+# -------------------------------------------------------------------
+
+# Load environment config from .env.example / .env
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env.sh"
 load_env
 
+# Resolve absolute paths
 abs_path() {
   local path="$1"
 
@@ -33,7 +40,6 @@ abs_path() {
   dir="$(dirname "$path")"
   local base
   base="$(basename "$path")"
-
   if [[ -d "$dir" ]]; then
     cd "$dir"
     printf '%s/%s\n' "$(pwd)" "$base"
@@ -47,6 +53,7 @@ abs_path() {
   cd "$cwd"
 }
 
+# Normalize the workspace path from config
 resolve_workspace_dir() {
   if [[ "$WORKSPACE_DIR" = /* ]]; then
     printf '%s\n' "$WORKSPACE_DIR"
@@ -55,6 +62,7 @@ resolve_workspace_dir() {
   fi
 }
 
+# Resolve project relative path to absolute
 resolve_project_path() {
   local project_arg="$1"
   local workspace
@@ -67,6 +75,7 @@ resolve_project_path() {
   fi
 }
 
+# Verify the target directory exists and is a Git repository
 enter_project() {
   local project_arg="$1"
   local project_path
@@ -85,10 +94,12 @@ enter_project() {
   fi
 }
 
+# Get currently checked-out Git branch name
 current_branch() {
   git branch --show-current
 }
 
+# Convert local branch name into public counterpart (strip suffix)
 public_branch_from_any() {
   local branch="$1"
   if [[ "$branch" =~ ${LOCAL_SUFFIX}$ ]]; then
@@ -98,6 +109,7 @@ public_branch_from_any() {
   fi
 }
 
+# Convert any branch to its local shadow variant (add suffix if missing)
 local_branch_from_any() {
   local branch="$1"
   if [[ "$branch" =~ ${LOCAL_SUFFIX}$ ]]; then
@@ -107,6 +119,7 @@ local_branch_from_any() {
   fi
 }
 
+# Ensure repo is in a clean state (no ongoing rebase/merge/cherry-pick, no dirty tree)
 ensure_clean_repo() {
   local cherry_pick_head_file merge_head_file rebase_merge_dir rebase_apply_dir
   cherry_pick_head_file="$(git rev-parse --git-path CHERRY_PICK_HEAD)"
@@ -142,6 +155,7 @@ ensure_clean_repo() {
   fi
 }
 
+# Detect the location of the Git hooks file according to core.hooksPath and Husky conventions
 detect_hook_file() {
   local hook_name="${1:-pre-commit}"
   local hooks_path

@@ -1,20 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# -------------------------------------------------------------------
+# Script: git-finish-feature.sh
+# Purpose: finalize work on a feature by syncing and cleaning branches.
+# -------------------------------------------------------------------
+
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/common.sh"
 
+# Validate required arguments
 if [[ $# -lt 1 ]]; then
   echo "Usage: git finish-feature <project-dir> [--keep-branches] [--no-pull] [--force]" >&2
   exit 1
 fi
-
 PROJECT_ARG="$1"
 shift
 DELETE_BRANCHES=1
 PULL_BASES=1
 FORCE_DELETE=0
 
+# Parse optional flags for finish-feature behavior
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --keep-branches)
@@ -37,20 +43,20 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Enter project and ensure repo is in clean state
 enter_project "$PROJECT_ARG"
 ensure_clean_repo
-
 current_branch_name="$(current_branch)"
 feature_public_branch="$(public_branch_from_any "$current_branch_name")"
 feature_local_branch="$(local_branch_from_any "$current_branch_name")"
 public_base="$PUBLIC_BASE_BRANCH"
 local_base="${PUBLIC_BASE_BRANCH}${LOCAL_SUFFIX}"
-
 if [[ "$feature_public_branch" == "$public_base" || "$feature_local_branch" == "$local_base" ]]; then
   echo "❌ This command must be run from a feature branch, not from $public_base or $local_base." >&2
   exit 1
 fi
 
+# Ensure all expected branches exist locally before proceeding
 for branch in "$feature_public_branch" "$feature_local_branch" "$public_base" "$local_base"; do
   if ! git show-ref --verify --quiet "refs/heads/$branch"; then
     echo "❌ Branch does not exist locally: $branch" >&2
@@ -58,26 +64,25 @@ for branch in "$feature_public_branch" "$feature_local_branch" "$public_base" "$
   fi
 done
 
+# Display summary of detected branches and bases for user confirmation
 echo "🏁 Feature completion detected"
 echo "   Public branch : $feature_public_branch"
 echo "   Local branch  : $feature_local_branch"
 echo "   Public base   : $public_base"
 echo "   Local base    : $local_base"
 echo
-
 echo "🔀 Checkout $public_base"
 git checkout "$public_base"
-
 if [[ "$PULL_BASES" -eq 1 ]]; then
   echo "⬇️  Pulling latest changes for $public_base"
   git pull
 fi
-
 public_branch_merged=0
 if git merge-base --is-ancestor "$feature_public_branch" "$public_base"; then
   public_branch_merged=1
 fi
 
+# Warn if the public branch does not appear to be merged into the public base
 if [[ "$public_branch_merged" -eq 1 ]]; then
   echo "✅ '$feature_public_branch' is already merged into '$public_base'."
 else
@@ -89,23 +94,23 @@ else
   fi
 fi
 
+# Sync local base with public base to prepare for final merge
 echo "🔀 Checkout $local_base"
 git checkout "$local_base"
-
 if [[ "$PULL_BASES" -eq 1 ]]; then
   echo "⬇️  Pulling latest changes for $local_base"
   git pull || true
 fi
 
+# Merge public base into local base to minimize risk of conflicts in final merge
 sync_message="$(printf "$SYNC_MERGE_MESSAGE_TEMPLATE" "$public_base" "$local_base")"
 feature_message="$(printf "$FEATURE_MERGE_MESSAGE_TEMPLATE" "$feature_local_branch" "$local_base")"
-
 echo "🔁 Merging '$public_base' into '$local_base'"
 git merge --no-edit -m "$sync_message" "$public_base"
-
 echo "🔁 Merging '$feature_local_branch' into '$local_base'"
 git merge --no-edit -m "$feature_message" "$feature_local_branch"
 
+# Final merge complete, now handle branch cleanup based on user preferences
 if [[ "$DELETE_BRANCHES" -eq 1 ]]; then
   echo "🧹 Cleaning up feature branches"
 
