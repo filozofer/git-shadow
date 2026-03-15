@@ -1,4 +1,4 @@
-# Git Local Comments Workflow
+# Git Shadow Branch Workflow
 
 A lightweight Git workflow that allows developers to keep **local design comments** and **possibly others things** in their code without pushing them to the shared repository.
 
