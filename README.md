@@ -57,7 +57,7 @@ Your development happens in the `@local` branch.
 When you finish working and want to commit your work you can call the git publish command :
 
 ```
-git publish my-project
+git shadow publish my-project
 ```
 
 The toolkit:
@@ -85,7 +85,7 @@ workspace/
 
 Clone:
 
-```
+```bash
 git clone https://github.com/filozofer/git-local-comments-workflow.git
 ```
 
@@ -95,7 +95,7 @@ git clone https://github.com/filozofer/git-local-comments-workflow.git
 
 Copy the configuration file:
 
-```
+```bash
 cp .env.example .env
 ```
 
@@ -112,20 +112,21 @@ LOCAL_COMMENT_PATTERN='^[[:space:]]*(///|##|---|;;|%%|<!---|/\*\*|\*)'
 
 ---
 
-## 3 Install Git aliases
+## 3 Make `git-shadow` available
 
-Run:
+Option 1 (recommended): add the toolkit `bin` folder to your PATH, then use the wrapper directly:
 
+```bash
+export PATH="$PWD/bin:$PATH"
+# now you can run:
+# git-shadow commit my-project -m "message"
+# git-shadow publish my-project
 ```
-./bin/install-aliases.sh
-```
 
-This installs commands:
+Option 2: create a Git alias to run the wrapper as `git shadow`:
 
-```
-git new-feature
-git publish
-git finish-feature
+```bash
+git config --global alias.shadow "!sh /chemin/vers/git-shadow/bin/git-shadow"
 ```
 
 ---
@@ -134,11 +135,12 @@ git finish-feature
 
 For each project:
 
-```
-./bin/install-hook.sh my-project
+```bash
+git shadow install-hook my-project
 ```
 
 The hook prevents accidental commits containing your local comment pattern (by default one extra comment marker, see LOCAL_COMMENT_PATTERN env var).
+The hook will not provoke error on other team members environments if they haven't install git shadow.
 
 ---
 
@@ -146,18 +148,18 @@ The hook prevents accidental commits containing your local comment pattern (by d
 
 All commands receive the **project directory** as their first argument.
 
-Example:
+Example : 
 
-```
-git publish my-project
+```bash
+git shadow publish my-project
 ```
 
 ---
 
 # Create a feature
 
-```
-git new-feature my-project feature/login
+```bash
+git shadow new-feature my-project feature/login
 ```
 
 Creates:
@@ -216,9 +218,14 @@ Example (look at the triple "/" used for comments here):
 
 # Publish work
 
-```
+```bash
 git add .
-git publish my-project --commit -m "feat(auth): user login function"
+git shadow commit my-project -m "feat(auth): user login function"
+git shadow publish my-project
+
+# OR 
+git add .
+git shadow publish my-project --commit -m "feat(auth): user login function"
 ```
 
 This:
@@ -229,7 +236,7 @@ This:
 
 Push normally:
 
-```
+```bash
 git push origin feature/login
 ```
 
@@ -245,8 +252,8 @@ Example of usages :
 
 After the MR is merged :
 
-```
-git finish-feature my-project
+```bash
+git shadow finish-feature my-project
 ```
 
 This command:
@@ -280,23 +287,23 @@ Your develop@local branches keep design comments and local features permanently.
 
 Create feature:
 
-```
-git new-feature my-project feature/user-login
+```bash
+git shadow new-feature my-project feature/user-login
 ```
 
 Work normally on your @local branch
 
 Publish:
 
-```
-git publish my-project --commit -m "feat(auth): user login function"
+```bash
+git shadow publish my-project --commit -m "feat(auth): user login function"
 git push
 ```
 
 Finish after your branch has been merge on the main branch :
 
-```
-git finish-feature my-project
+```bash
+git shadow finish-feature my-project
 ```
 
 ---

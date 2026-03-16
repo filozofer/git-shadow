@@ -30,8 +30,19 @@ if [[ -f "$hook_file" ]] && grep -Fq "$HOOK_CHECK_MARKER" "$hook_file"; then
 fi
 
 # Append pre-commit script to hook file, creating it if it doesn't exist
-project_path="$PWD"
-hook_script="\"$TOOLKIT_ROOT/scripts/check-local-comments.sh\" \"$project_path\""
+# Use relative path from project root and detect git-shadow / git alias availability.
+# If not found, skip silently (no hook enforcement).
+hook_script=''
+hook_script+='if command -v git-shadow >/dev/null 2>&1; then\n'
+hook_script+='  git-shadow check-local-comments .\n'
+hook_script+='  exit $?\n'
+hook_script+='elif git config --global alias.shadow >/dev/null 2>&1; then\n'
+hook_script+='  git shadow check-local-comments .\n'
+hook_script+='  exit $?\n'
+hook_script+='fi\n'
+# Nothing to do if git-shadow is not available.
+hook_script+='exit 0'
+
 if [[ -f "$hook_file" ]]; then
   printf '\n%s\n%s\n' "$HOOK_CHECK_MARKER" "$hook_script" >> "$hook_file"
 else

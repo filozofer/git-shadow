@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TOOL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+COMMAND="${1:-}"
+shift || true
+
+# Main command dispatcher
+case "$COMMAND" in
+  new-feature)
+    "$TOOL_ROOT/commands/new-feature.sh" "$@"
+    ;;
+  check-local-comments)
+    "$TOOL_ROOT/commands/check-local-comments.sh" "$@"
+    ;;
+  commit)
+    "$TOOL_ROOT/commands/commit.sh" "$@"
+    ;;
+  publish)
+    "$TOOL_ROOT/commands/publish.sh" "$@"
+    ;;
+  finish-feature)
+    "$TOOL_ROOT/commands/finish-feature.sh" "$@"
+    ;;
+  install-hook)
+    "$TOOL_ROOT/commands/install-hook.sh" "$@"
+    ;;  help|-h|--help|"")
+    cat <<EOF
+git-shadow
+
+Shadow branch workflow utilities.
+
+Commands:
+  new-feature <project> <branch>
+  commit <project> [-m "message"]
+  publish <project> [--commit -m MESSAGE]
+  finish-feature <project>
+  install-hook <project>
+
+Examples:
+  git shadow new-feature my-project feat/login
+  git shadow commit my-project -m "feat(auth): login route"
+  git shadow publish my-project --commit -m "feat: login"
+  git shadow finish-feature my-project
+EOF
+    ;;
+  *)
+    echo "Unknown command: $COMMAND"
+    exit 1
+    ;;
+esac
