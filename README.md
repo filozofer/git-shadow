@@ -8,6 +8,7 @@ Git Shadow introduces the **Shadow Branch Pattern**, a Git workflow that lets de
 ![Git Tooling](https://img.shields.io/badge/tooling-git-orange)
 ![Shell Scripts](https://img.shields.io/badge/scripts-bash-lightgrey)
 ![Workflow](https://img.shields.io/badge/workflow-shadow--branch-purple)
+[![Website](https://img.shields.io/badge/website-gitshadow.dev-violet)](https://gitshadow.dev)
 
 This toolkit provides a small set of commands and hooks that create a **shadow branch workflow**:
 
