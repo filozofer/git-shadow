@@ -68,4 +68,4 @@ if git diff --cached --quiet; then
 fi
 
 # Commit local comments in a separate commit
-git commit -m "[COMMENTS] $last_commit_message" --no-verify
+git commit -m "$SHADOW_COMMIT_PREFIX $last_commit_message" --no-verify

@@ -17,7 +17,7 @@ setup() {
   printf '/// local comment\nreal code\n' > feature.txt
   git add feature.txt
   git shadow commit -m "feat: real code"
-  # Now on test-feature@local with 2 commits: feat + [COMMENTS]
+  # Now on test-feature@local with 2 commits: feat + [MEMORY]
 }
 
 teardown() {
@@ -43,11 +43,11 @@ teardown() {
   [[ "$result" == *"feat: real code"* ]]
 }
 
-@test "feature publish skips [COMMENTS] commits from the public branch" {
+@test "feature publish skips [MEMORY] commits from the public branch" {
   git shadow feature publish
   git checkout -q test-feature
   result="$(git log --oneline)"
-  [[ "$result" != *"[COMMENTS]"* ]]
+  [[ "$result" != *"[MEMORY]"* ]]
 }
 
 @test "feature publish outputs a completion message" {

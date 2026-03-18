@@ -28,7 +28,7 @@ has_local_comments=0
 while IFS= read -r file; do
   [[ -z "$file" ]] && continue
 
-  # Regex search base on LOCAL_COMMENT_PATTERN
+  # Search staged file content for lines matching LOCAL_COMMENT_PATTERN
   if git show ":$file" 2>/dev/null | grep -nE "$LOCAL_COMMENT_PATTERN" >/dev/null 2>&1; then
     if [[ "$has_local_comments" -eq 0 ]]; then
       echo "❌ Commit blocked: local comments are still present in staged files."

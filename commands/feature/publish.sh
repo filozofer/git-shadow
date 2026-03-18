@@ -84,9 +84,9 @@ while IFS= read -r line; do
     continue
   fi
 
-  # Skip commits that appear to contain local comments based on commit message convention
-  if [[ "$subject" =~ ^\[(MEMORY|COMMENTS)\] ]]; then
-    echo "⏭️  Ignored (shadow memory/comments): $sha  $subject"
+  # Skip commits that match the SHADOW_COMMIT_FILTER
+  if [[ "$subject" =~ $SHADOW_COMMIT_FILTER ]]; then
+    echo "⏭️  Ignored (shadow commit): $sha  $subject"
     continue
   fi
 

@@ -46,19 +46,19 @@ teardown() {
   [[ "$result" == *"real code"* ]]
 }
 
-@test "commit creates a [COMMENTS] commit when local comments are present" {
+@test "commit creates a [MEMORY] commit when local comments are present" {
   printf '/// local comment\nreal code\n' > feature.txt
   git add feature.txt
   git shadow commit -m "feat: real code"
   last_msg="$(git log -1 --pretty=%s)"
-  [[ "$last_msg" == "[COMMENTS]"* ]]
+  [[ "$last_msg" == "[MEMORY]"* ]]
 }
 
-@test "commit does not create a [COMMENTS] commit when no local comments" {
+@test "commit does not create a [MEMORY] commit when no local comments" {
   echo "plain code without comments" > feature.txt
   git add feature.txt
   git shadow commit -m "feat: plain"
   commit_count="$(git log --oneline | wc -l)"
-  # Only 2 commits: initial + feat:plain (no COMMENTS commit)
+  # Only 2 commits: initial + feat:plain (no MEMORY commit)
   [ "$commit_count" -eq 2 ]
 }

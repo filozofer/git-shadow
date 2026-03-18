@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # -------------------------------------------------------------------
-# Library: install-hook.sh
+# Script: install-hook.sh
 # Purpose: Bootstrap setup for git hook that prevent committing with local comments.
 # -------------------------------------------------------------------
 

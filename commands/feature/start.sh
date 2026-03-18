@@ -51,7 +51,7 @@ if git show-ref --verify --quiet "refs/heads/$LOCAL_BRANCH"; then
   exit 1
 fi
 
-#  Create public feature branch from public base, then create local shadow branch from local base
+# Create public feature branch from public base, then create local shadow branch from local base
 echo "🌿 Creating public branch '$FEATURE_NAME' from '$PUBLIC_BASE'"
 git checkout "$PUBLIC_BASE"
 git checkout -b "$FEATURE_NAME"

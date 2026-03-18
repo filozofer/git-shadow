@@ -46,7 +46,7 @@ fi
 if git diff --cached --quiet; then
   echo "❌ After removing local comments, nothing remains to commit." >&2
   echo "You can commit your local comments with: " >&2
-  echo "git commit -m \"[COMMENTS] title\" --no-verify"
+  echo "git commit -m \"$SHADOW_COMMIT_PREFIX title\" --no-verify"
   exit 1
 fi
 
@@ -69,4 +69,4 @@ if git diff --cached --quiet; then
 fi
 
 # Commit local comments in a separate commit
-git commit -m "[COMMENTS] $last_commit_message" --no-verify
+git commit -m "$SHADOW_COMMIT_PREFIX $last_commit_message" --no-verify
