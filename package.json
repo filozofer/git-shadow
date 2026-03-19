@@ -1,6 +1,6 @@
 {
   "name": "git-shadow",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Shadow branch pattern utilities for Git — keep local thinking artifacts without polluting the shared repository.",
   "homepage": "https://github.com/filozofer/git-shadow",
   "repository": {
@@ -20,7 +20,7 @@
     "VERSION"
   ],
   "scripts": {
-    "postinstall": "node -e \"var e=require('child_process').execSync,o={cwd:__dirname,stdio:'ignore'};e('chmod +x bin/git-shadow',o);e('find commands lib scripts -name \\\"*.sh\\\" -exec chmod +x {} \\\\;',o);\""
+    "postinstall": "chmod +x bin/git-shadow && find . -name '*.sh' -exec chmod +x {} \\; 2>/dev/null || true"
   },
   "os": [
     "linux",
