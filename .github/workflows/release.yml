@@ -32,25 +32,6 @@ jobs:
           echo "archive=$ARCHIVE" >> "$GITHUB_OUTPUT"
           echo "sha256=$(sha256sum "$ARCHIVE" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
-      - name: Update Homebrew formula
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          SHA256="${{ steps.tarball.outputs.sha256 }}"
-          ARCHIVE_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ steps.tarball.outputs.archive }}"
-          sed -i \
-            -e "s|url \".*\"|url \"${ARCHIVE_URL}\"|" \
-            -e "s|sha256 \".*\"|sha256 \"${SHA256}\"|" \
-            -e "s|version \".*\"|version \"${VERSION}\"|" \
-            homebrew/git-shadow.rb
-
-      - name: Commit updated formula
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add homebrew/git-shadow.rb
-          git commit -m "chore(homebrew): update formula to ${{ github.ref_name }}" || true
-          git push origin HEAD:main || true
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -63,17 +44,10 @@ jobs:
             curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
             ```
 
-            ## Homebrew
-
-            ```bash
-            brew tap filozofer/tap
-            brew install git-shadow
-            ```
-
             ## npm
 
             ```bash
-            npm install -g git-shadow-cli
+            npm install -g git-shadow
             ```
 
             ---

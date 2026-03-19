@@ -97,19 +97,10 @@ If `~/.local/bin` is not in your `PATH`, the installer prints the line to add to
 
 > Install a specific version: `GIT_SHADOW_VERSION=0.1.0 curl -fsSL ... | bash`
 
-### Homebrew (macOS / Linux)
-
-```bash
-brew tap filozofer/tap
-brew install git-shadow
-```
-
-> Requires the [filozofer/homebrew-tap](https://github.com/filozofer/homebrew-tap) tap to be published.
-
 ### npm
 
 ```bash
-npm install -g git-shadow-cli
+npm install -g git-shadow
 ```
 
 > Requires Node ≥ 14. Sets up the `git-shadow` binary via npm's global bin directory.
