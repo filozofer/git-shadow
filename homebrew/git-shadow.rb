@@ -1,9 +1,9 @@
 class GitShadow < Formula
   desc "Shadow branch pattern utilities for Git"
   homepage "https://github.com/filozofer/git-shadow"
-  url "https://github.com/filozofer/git-shadow/releases/download/v1.0.1/git-shadow-1.0.1.tar.gz"
-  sha256 "0d6e22eea6542cd1afc94888f02792c68a46e9557d34d3994e0cfae104fc990e"
-  version "1.0.1"
+  url "https://github.com/filozofer/git-shadow/releases/download/v1.0.2/git-shadow-1.0.2.tar.gz"
+  sha256 "b826999a09c18e29501eadf7bd8ba2b0c7f4d9a5d860551223e1910f349daa8a"
+  version "1.0.2"
   license "MIT"
 
   # No dependencies beyond bash and git (both already required by Homebrew).
