@@ -32,7 +32,9 @@ while IFS= read -r -d '' file; do
   tmp_file="$(mktemp)"
 
   # Remove lines matching the local comment pattern while preserving other content.
-  git show ":$file" | grep -vE "$LOCAL_COMMENT_PATTERN" > "$tmp_file"
+  # grep -v exits 1 when all lines match (file is entirely local comments); || true prevents
+  # set -e from aborting — the resulting empty index entry is handled by the caller.
+  git show ":$file" | grep -vE "$LOCAL_COMMENT_PATTERN" > "$tmp_file" || true
   index_info="$(git ls-files -s -- "$file")"
   if [[ -z "$index_info" ]]; then
     echo "Unable to read index info for $file" >&2

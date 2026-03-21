@@ -234,6 +234,14 @@ teardown() {
   [[ "$output" == *'"error"'* ]]
 }
 
+@test "status --json detached HEAD contains current_branch null" {
+  git commit --allow-empty -qm "detach point"
+  git checkout -q --detach HEAD
+  run git shadow status --json
+  [ "$status" -eq 1 ]
+  [[ "$output" == *'"current_branch": null'* ]]
+}
+
 @test "status exits 1 on unknown argument" {
   run git shadow status --unknown
   [ "$status" -eq 1 ]

@@ -19,10 +19,11 @@ _git_shadow() {
   case $state in
     args)
       case $line[1] in
-        feature) _git_shadow_feature ;;
-        config)  _git_shadow_config ;;
-        status)  _arguments '--json[output as JSON]' ;;
-        commit)  _arguments '-m[commit message]:message:' ;;
+        feature)    _git_shadow_feature ;;
+        config)     _git_shadow_config ;;
+        status)     _arguments '--json[output as JSON]' ;;
+        commit)     _arguments '-m[commit message]:message:' ;;
+        completion) _arguments '1: :_git_shadow_completion_subcommands' ;;
       esac
       ;;
   esac
@@ -39,6 +40,7 @@ _git_shadow_commands() {
     'check-local-comments:check staged files for local comment markers'
     'feature:manage the feature branch lifecycle (start / publish / finish)'
     'config:manage git-shadow configuration'
+    'completion:manage shell completion'
   )
   _describe 'command' commands
 }
@@ -122,6 +124,14 @@ _git_shadow_config_subcommands() {
     'get:get a single configuration value'
     'set:set a configuration value'
     'unset:remove a configuration value'
+  )
+  _describe 'subcommand' subcommands
+}
+
+_git_shadow_completion_subcommands() {
+  local subcommands
+  subcommands=(
+    'install:install shell completion into your shell config'
   )
   _describe 'subcommand' subcommands
 }

@@ -63,3 +63,20 @@ teardown() {
   git shadow install-hooks
   grep -q "check-shadow-push" ".git/hooks/pre-push"
 }
+
+@test "install-hooks pre-commit hook is syntactically valid sh" {
+  git shadow install-hooks
+  sh -n ".git/hooks/pre-commit"
+}
+
+@test "install-hooks pre-push hook is syntactically valid sh" {
+  git shadow install-hooks
+  sh -n ".git/hooks/pre-push"
+}
+
+@test "install-hooks appended pre-commit hook is syntactically valid sh" {
+  printf '#!/usr/bin/env sh\necho "existing hook"\n' > ".git/hooks/pre-commit"
+  chmod +x ".git/hooks/pre-commit"
+  git shadow install-hooks
+  sh -n ".git/hooks/pre-commit"
+}

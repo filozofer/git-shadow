@@ -18,6 +18,12 @@ PROJECT_ARG='.'
 FEATURE_NAME="$1"
 LOCAL_BRANCH="${FEATURE_NAME}${LOCAL_SUFFIX}"
 
+# Validate branch name before doing any git operations
+if ! git check-ref-format --branch "$FEATURE_NAME" >/dev/null 2>&1; then
+  echo "❌ Invalid branch name: '$FEATURE_NAME'" >&2
+  exit 1
+fi
+
 # Enter project and ensure repo is in clean state
 enter_project "$PROJECT_ARG"
 ensure_clean_repo

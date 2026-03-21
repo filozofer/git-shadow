@@ -32,7 +32,7 @@ CURRENT_BRANCH="$(current_branch)"
 
 if [[ -z "$CURRENT_BRANCH" ]]; then
   if $JSON; then
-    printf '{"error": "detached HEAD state"}\n'
+    printf '{"error": "detached HEAD state", "current_branch": null}\n'
   else
     echo "❌ Detached HEAD state — not on any branch." >&2
   fi

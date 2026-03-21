@@ -55,3 +55,15 @@ teardown() {
   git show-ref --verify --quiet "refs/heads/test-feature"
   git show-ref --verify --quiet "refs/heads/test-feature@local"
 }
+
+@test "feature start exits 1 for invalid branch name" {
+  run git shadow feature start "invalid..name"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"Invalid branch name"* ]]
+}
+
+@test "feature start exits 1 for branch name with spaces" {
+  run git shadow feature start "name with spaces"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"Invalid branch name"* ]]
+}

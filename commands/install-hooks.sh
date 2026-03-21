@@ -24,24 +24,34 @@ mkdir -p "$(dirname "$pre_commit_file")"
 if [[ -f "$pre_commit_file" ]] && grep -Fq "$HOOK_CHECK_MARKER" "$pre_commit_file"; then
   echo "ℹ️  pre-commit hook already installed in: $pre_commit_file"
 else
-  pre_commit_script=''
-  pre_commit_script+='if command -v git-shadow >/dev/null 2>&1; then\n'
-  pre_commit_script+='  git-shadow check-local-comments .\n'
-  pre_commit_script+='  exit $?\n'
-  pre_commit_script+='elif git config --global alias.shadow >/dev/null 2>&1; then\n'
-  pre_commit_script+='  git shadow check-local-comments .\n'
-  pre_commit_script+='  exit $?\n'
-  pre_commit_script+='fi\n'
-  pre_commit_script+='exit 0'
-
   if [[ -f "$pre_commit_file" ]]; then
-    printf '\n%s\n%s\n' "$HOOK_CHECK_MARKER" "$pre_commit_script" >> "$pre_commit_file"
+    {
+      printf '\n%s\n' "$HOOK_CHECK_MARKER"
+      cat <<'HOOK'
+if command -v git-shadow >/dev/null 2>&1; then
+  git-shadow check-local-comments .
+  exit $?
+elif git config --global alias.shadow >/dev/null 2>&1; then
+  git shadow check-local-comments .
+  exit $?
+fi
+exit 0
+HOOK
+    } >> "$pre_commit_file"
   else
-    cat > "$pre_commit_file" <<EOF
-#!/usr/bin/env sh
-$HOOK_CHECK_MARKER
-$pre_commit_script
-EOF
+    {
+      printf '#!/usr/bin/env sh\n%s\n' "$HOOK_CHECK_MARKER"
+      cat <<'HOOK'
+if command -v git-shadow >/dev/null 2>&1; then
+  git-shadow check-local-comments .
+  exit $?
+elif git config --global alias.shadow >/dev/null 2>&1; then
+  git shadow check-local-comments .
+  exit $?
+fi
+exit 0
+HOOK
+    } > "$pre_commit_file"
     chmod +x "$pre_commit_file"
   fi
 
@@ -59,24 +69,34 @@ mkdir -p "$(dirname "$pre_push_file")"
 if [[ -f "$pre_push_file" ]] && grep -Fq "$PRE_PUSH_MARKER" "$pre_push_file"; then
   echo "ℹ️  pre-push hook already installed in: $pre_push_file"
 else
-  pre_push_script=''
-  pre_push_script+='if command -v git-shadow >/dev/null 2>&1; then\n'
-  pre_push_script+='  git-shadow check-shadow-push "$1" "$2"\n'
-  pre_push_script+='  exit $?\n'
-  pre_push_script+='elif git config --global alias.shadow >/dev/null 2>&1; then\n'
-  pre_push_script+='  git shadow check-shadow-push "$1" "$2"\n'
-  pre_push_script+='  exit $?\n'
-  pre_push_script+='fi\n'
-  pre_push_script+='exit 0'
-
   if [[ -f "$pre_push_file" ]]; then
-    printf '\n%s\n%s\n' "$PRE_PUSH_MARKER" "$pre_push_script" >> "$pre_push_file"
+    {
+      printf '\n%s\n' "$PRE_PUSH_MARKER"
+      cat <<'HOOK'
+if command -v git-shadow >/dev/null 2>&1; then
+  git-shadow check-shadow-push "$1" "$2"
+  exit $?
+elif git config --global alias.shadow >/dev/null 2>&1; then
+  git shadow check-shadow-push "$1" "$2"
+  exit $?
+fi
+exit 0
+HOOK
+    } >> "$pre_push_file"
   else
-    cat > "$pre_push_file" <<EOF
-#!/usr/bin/env sh
-$PRE_PUSH_MARKER
-$pre_push_script
-EOF
+    {
+      printf '#!/usr/bin/env sh\n%s\n' "$PRE_PUSH_MARKER"
+      cat <<'HOOK'
+if command -v git-shadow >/dev/null 2>&1; then
+  git-shadow check-shadow-push "$1" "$2"
+  exit $?
+elif git config --global alias.shadow >/dev/null 2>&1; then
+  git shadow check-shadow-push "$1" "$2"
+  exit $?
+fi
+exit 0
+HOOK
+    } > "$pre_push_file"
     chmod +x "$pre_push_file"
   fi
 

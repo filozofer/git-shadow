@@ -23,7 +23,7 @@ _git_shadow() {
 
   # Complete top-level command
   if [[ $pos -le 0 ]]; then
-    COMPREPLY=($(compgen -W "version install-hooks doctor status commit check-local-comments feature config" -- "$cur"))
+    COMPREPLY=($(compgen -W "version install-hooks doctor status commit check-local-comments feature config completion" -- "$cur"))
     return
   fi
 
@@ -62,6 +62,11 @@ _git_shadow() {
       ;;
     commit)
       COMPREPLY=($(compgen -W "-m" -- "$cur"))
+      ;;
+    completion)
+      if [[ $pos -eq 1 ]]; then
+        COMPREPLY=($(compgen -W "install" -- "$cur"))
+      fi
       ;;
   esac
 }
