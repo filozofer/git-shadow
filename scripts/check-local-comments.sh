@@ -9,15 +9,8 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/common.sh"
 
-# Determine project path (default to current directory for hook usage)
-if [[ $# -lt 1 || "$1" == "." ]]; then
-  project_path="$PWD"
-else
-  project_path="$1"
-fi
-
-# Navigate to project
-enter_project "$project_path"
+# Navigate to project (default to current directory for hook usage)
+enter_project "${1:-.}"
 
 # Get list of staged files and check for local comments
 staged_files="$(git diff --cached --name-only --diff-filter=ACM)"

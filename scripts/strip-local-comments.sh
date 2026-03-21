@@ -9,14 +9,8 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/common.sh"
 
-# Check that project directory is provided and exists
-if [[ $# -lt 1 ]]; then
-  echo "Usage: $0 <project-dir>" >&2
-  exit 1
-fi
-
-# Navigate to project and get list of staged files
-enter_project "$1"
+# Navigate to project and get list of staged files (default to current directory)
+enter_project "${1:-.}"
 has_changes=0
 while IFS= read -r -d '' file; do
   # Skip deleted files; only process added/copied/modified files

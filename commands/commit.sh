@@ -40,7 +40,7 @@ if git diff --cached --quiet; then
 fi
 
 # Remove local comments from index while keeping working tree unmodified
-"$TOOLKIT_ROOT/scripts/strip-local-comments.sh" "$PWD"
+"$TOOLKIT_ROOT/scripts/strip-local-comments.sh"
 
 # If no code remains after stripping comments, abort commit
 if git diff --cached --quiet; then
