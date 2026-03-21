@@ -396,9 +396,7 @@ The test suite includes:
 
 # Status
 
-Git Shadow is currently evolving.
-
-The core workflow is already usable for daily development, but the project is still improving and the CLI may evolve as the pattern matures.
+Git Shadow is ready for daily development.
 
 ---
 
