@@ -9,8 +9,6 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../lib" && pwd)/common.sh"
 
-# Publish operates on current repo only.
-PROJECT_ARG='.'
 COMMIT_FIRST=0
 COMMIT_MESSAGE=""
 
@@ -49,7 +47,7 @@ if [[ ! "$CURRENT_BRANCH" =~ ${LOCAL_SUFFIX}$ ]]; then
   echo "   Current branch: $CURRENT_BRANCH" >&2
   exit 1
 fi
-TARGET_BRANCH="${CURRENT_BRANCH%$LOCAL_SUFFIX}"
+TARGET_BRANCH="${CURRENT_BRANCH%"$LOCAL_SUFFIX"}"
 SOURCE_BRANCH="$CURRENT_BRANCH"
 
 # If requested, commit any remaining changes in the local branch before publishing

@@ -38,7 +38,7 @@ load_env() {
   local user_config="${XDG_CONFIG_HOME:-$HOME/.config}/git-shadow/config.env"
   if [[ -f "$user_config" ]]; then
     set -a
-    # shellcheck disable=SC1091
+    # shellcheck disable=SC1090,SC1091
     source "$user_config"
     set +a
     _check_unknown_keys "$user_config"
@@ -48,7 +48,7 @@ load_env() {
   local project_config="$PWD/.git-shadow.env"
   if [[ -f "$project_config" ]]; then
     set -a
-    # shellcheck disable=SC1091
+    # shellcheck disable=SC1090,SC1091
     source "$project_config"
     set +a
     _check_unknown_keys "$project_config"

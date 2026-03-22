@@ -109,7 +109,7 @@ current_branch() {
 public_branch_from_any() {
   local branch="$1"
   if [[ "$branch" =~ ${LOCAL_SUFFIX}$ ]]; then
-    printf '%s\n' "${branch%$LOCAL_SUFFIX}"
+    printf '%s\n' "${branch%"$LOCAL_SUFFIX"}"
   else
     printf '%s\n' "$branch"
   fi

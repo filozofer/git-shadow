@@ -102,7 +102,9 @@ if [[ "$PULL_BASES" -eq 1 ]]; then
 fi
 
 # Merge public base into local base to minimize risk of conflicts in final merge
+# shellcheck disable=SC2059
 sync_message="$(printf "$SYNC_MERGE_MESSAGE_TEMPLATE" "$public_base" "$local_base")"
+# shellcheck disable=SC2059
 feature_message="$(printf "$FEATURE_MERGE_MESSAGE_TEMPLATE" "$feature_local_branch" "$local_base")"
 echo "🔁 Merging '$public_base' into '$local_base'"
 git merge --no-edit -m "$sync_message" "$public_base"

@@ -44,7 +44,7 @@ IS_SHADOW=0
 if [[ "$CURRENT_BRANCH" =~ ${LOCAL_SUFFIX}$ ]]; then
   IS_SHADOW=1
   SHADOW_BRANCH="$CURRENT_BRANCH"
-  PUBLIC_BRANCH="${CURRENT_BRANCH%$LOCAL_SUFFIX}"
+  PUBLIC_BRANCH="${CURRENT_BRANCH%"$LOCAL_SUFFIX"}"
 else
   PUBLIC_BRANCH="$CURRENT_BRANCH"
   SHADOW_BRANCH="${CURRENT_BRANCH}${LOCAL_SUFFIX}"
@@ -53,8 +53,8 @@ fi
 # Verify at least one shadow branch exists in the pair
 shadow_exists=0
 public_exists=0
-git show-ref --verify --quiet "refs/heads/$SHADOW_BRANCH" && shadow_exists=1 || true
-git show-ref --verify --quiet "refs/heads/$PUBLIC_BRANCH" && public_exists=1 || true
+if git show-ref --verify --quiet "refs/heads/$SHADOW_BRANCH"; then shadow_exists=1; fi
+if git show-ref --verify --quiet "refs/heads/$PUBLIC_BRANCH"; then public_exists=1; fi
 
 if [[ $shadow_exists -eq 0 && $IS_SHADOW -eq 0 ]]; then
   if $JSON; then
@@ -87,7 +87,7 @@ if [[ $shadow_exists -eq 1 && $public_exists -eq 1 ]]; then
 
   while IFS= read -r line; do
     [[ -z "$line" ]] && continue
-    [[ "${line:0:1}" == "+" ]] && (( public_ahead++ )) || true
+    if [[ "${line:0:1}" == "+" ]]; then (( ++public_ahead )) || true; fi
   done < <(git cherry "$SHADOW_BRANCH" "$PUBLIC_BRANCH" 2>/dev/null || true)
 fi
 
