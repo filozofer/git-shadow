@@ -8,6 +8,8 @@
 
 Git Shadow introduces the **Shadow Branch Pattern**, a Git workflow that lets developers keep **local thinking artifacts** (comments, notes, exploration code) without polluting the shared repository.
 
+![demo](https://gitshadow.dev/demo/demo.gif)
+
 ![MIT License](https://img.shields.io/badge/license-MIT-green)
 ![Git Tooling](https://img.shields.io/badge/tooling-git-orange)
 ![Shell Scripts](https://img.shields.io/badge/scripts-bash-lightgrey)
