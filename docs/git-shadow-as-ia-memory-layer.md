@@ -89,14 +89,21 @@ Here's what this looks like on a real feature. The developer is building an auth
 On `feature/auth@local`, the file looks like this:
 
 ```ts
+/// ARCHITECTURE NOTE (for AI): This service is the single entry point for auth.
+/// The session store is Redis — see config/redis.ts for connection details.
+/// Known constraint: tokens must be invalidated on password change (see issue #142).
+/// AI context: the team prefers throwing typed errors over returning error codes.
 
 export async function login(email: string, password: string): Promise<Session> {
+  /// Step 1: fetch user — email is unique, findUnique is correct here
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user) throw new AuthError('INVALID_CREDENTIALS')
 
+  /// Step 2: bcrypt compare — intentionally constant-time
   const valid = await bcrypt.compare(password, user.passwordHash)
   if (!valid) throw new AuthError('INVALID_CREDENTIALS')
 
+  /// Step 3: create session with 30-day TTL (product decision, not a bug)
   return sessionStore.create({ userId: user.id, ttl: 30 * 24 * 3600 })
 }
 ```
