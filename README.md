@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo/git-shadow-logo.svg" alt="git-shadow" width="320" />
+</p>
+
 # Git Shadow
 
 **Think in code. Publish clean code.**
