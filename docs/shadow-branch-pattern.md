@@ -44,8 +44,8 @@ feature/login@local   → shadow branch
 Typical base branches:
 
 ```
-develop               → public base branch
-develop@local         → shadow base branch
+main               → public base branch
+main@local         → shadow base branch
 ```
 
 The shadow branch may contain development scaffolding that is not intended to be shared.
@@ -90,7 +90,7 @@ feature/x
 6. Merge the shadow feature branch back into the shadow base branch.
 
 ```
-develop@local
+main@local
 ```
 
 This preserves the local reasoning structures for future work.
