@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This repository uses **git-shadow**.
+This repository uses **git shadow**.
 
 If you are an AI coding agent, assistant, or automated contributor, you must follow the workflow described below.
 
@@ -92,7 +92,7 @@ git shadow feature publish
 git push origin <branch-name>
 ```
 
-If you are asked to finalize work, prefer publication through git-shadow rather than manually copying noisy changes to the public branch.
+If you are asked to finalize work, prefer publication through git shadow rather than manually copying noisy changes to the public branch.
 
 6. Git shadow configuration
 
@@ -119,7 +119,7 @@ The goal is not only to keep the repository clean.
 The goal is to preserve a valuable truth:
 how code is produced ≠ how code is shared
 
-git-shadow exists to protect both.
+git shadow exists to protect both.
 
 Short reminder
 Use @local to think.

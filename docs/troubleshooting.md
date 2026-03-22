@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This page covers failure recovery for the most common situations where git-shadow operations go wrong.
+This page covers failure recovery for the most common situations where git shadow operations go wrong.
 
 > **Quick state check** — when something feels off, start here:
 > ```bash
@@ -21,8 +21,8 @@ This page covers failure recovery for the most common situations where git-shado
 6. [Shadow branch is behind after a team pull](#6-shadow-branch-is-behind-after-a-team-pull)
 7. [Public branch was accidentally deleted](#7-public-branch-was-accidentally-deleted)
 8. [LOCAL_COMMENT_PATTERN matches real code](#8-local_comment_pattern-matches-real-code)
-9. [Removing git-shadow hooks from a project](#9-removing-git-shadow-hooks-from-a-project)
-10. [Adopting git-shadow on an existing repo](#10-adopting-git-shadow-on-an-existing-repo)
+9. [Removing git shadow hooks from a project](#9-removing-git-shadow-hooks-from-a-project)
+10. [Adopting git shadow on an existing repo](#10-adopting-git-shadow-on-an-existing-repo)
 11. [Binary not found after installation](#11-binary-not-found-after-installation)
 
 ---
@@ -326,9 +326,9 @@ LOCAL_COMMENT_PATTERN='^[[:space:]]*(//!|##!)'
 
 ---
 
-## 9. Removing git-shadow hooks from a project
+## 9. Removing git shadow hooks from a project
 
-**When to do this:** You want to stop using git-shadow in a project, or you need to temporarily disable the hooks.
+**When to do this:** You want to stop using git shadow in a project, or you need to temporarily disable the hooks.
 
 **Identify the hook files:**
 
@@ -336,9 +336,9 @@ LOCAL_COMMENT_PATTERN='^[[:space:]]*(//!|##!)'
 git config --get core.hooksPath   # prints custom hook path if set, otherwise default is .git/hooks/
 ```
 
-**Option A: remove only the git-shadow block (recommended)**
+**Option A: remove only the git shadow block (recommended)**
 
-The hooks installed by git-shadow are delimited by a marker comment. Open the hook file and delete the git-shadow section:
+The hooks installed by git shadow are delimited by a marker comment. Open the hook file and delete the git shadow section:
 
 ```bash
 # pre-commit hook
@@ -350,7 +350,7 @@ nano .git/hooks/pre-push
 # Delete lines from "# git-shadow pre-push hook" to "exit 0"
 ```
 
-If the hook file only contained the git-shadow block, you can delete it entirely:
+If the hook file only contained the git shadow block, you can delete it entirely:
 
 ```bash
 rm .git/hooks/pre-commit
@@ -366,7 +366,7 @@ git push --no-verify
 
 ---
 
-## 10. Adopting git-shadow on an existing repo
+## 10. Adopting git shadow on an existing repo
 
 **Scenario:** You have an existing feature branch (`feature/login`) and want to adopt the shadow branch pattern without losing your work.
 

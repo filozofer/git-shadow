@@ -176,7 +176,7 @@ In all cases, the underlying idea is similar:
 
 ## Reference Implementation
 
-The CLI tool **git-shadow** implements this workflow and automates the operations required to manage shadow branches.
+The CLI tool **git shadow** implements this workflow and automates the operations required to manage shadow branches.
 
 Example usage:
 

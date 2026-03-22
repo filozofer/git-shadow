@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo/git-shadow-logo.svg" alt="git-shadow" width="320" />
+  <img src="assets/logo/git-shadow-logo.svg" alt="git shadow" width="320" />
 </p>
 
 # Git Shadow
@@ -90,7 +90,7 @@ The toolkit:
 
 # Installation
 
-## 1 Install git-shadow
+## 1 Install git shadow
 
 ### curl (Linux / macOS / WSL — recommended)
 
