@@ -355,6 +355,8 @@ Git Shadow implements a workflow called the **Shadow Branch Pattern**.
 
 **[Shadow Branch Pattern](docs/shadow-branch-pattern.md)**: Detailed explanation of the underlying pattern, including motivation, workflow, benefits, and trade-offs.
 
+**[Troubleshooting](docs/troubleshooting.md)**: Recovery procedures for the most common failure modes — cherry-pick conflicts, merge conflicts, hook issues, branch recovery, and migration.
+
 ---
 
 # Drawbacks
