@@ -9,11 +9,45 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../lib" && pwd)/common.sh"
 
-# Validate required parameters
-if [[ $# -ne 1 ]]; then
-  echo "Usage: git shadow feature start <branch-name>" >&2
-  exit 1
+# ---------------------------------------------------------------------------
+# No argument: smart detection based on current branch
+# ---------------------------------------------------------------------------
+if [[ $# -eq 0 ]]; then
+  enter_project '.'
+  ensure_clean_repo
+
+  CURRENT_BRANCH="$(current_branch)"
+  if [[ -z "$CURRENT_BRANCH" ]]; then
+    ui_error "Unable to determine current branch."
+    exit 1
+  fi
+
+  # Case 1: already on a shadow branch
+  if [[ "$CURRENT_BRANCH" =~ ${LOCAL_SUFFIX}$ ]]; then
+    ui_error "You are already on a shadow branch ('$CURRENT_BRANCH')."
+    ui_info  "Provide a branch name to create a new feature."
+    exit 1
+  fi
+
+  # Case 2: on a public branch — check if shadow branch already exists
+  SHADOW_BRANCH="${CURRENT_BRANCH}${LOCAL_SUFFIX}"
+  if git show-ref --verify --quiet "refs/heads/$SHADOW_BRANCH"; then
+    ui_warn "A shadow branch already exists for '$CURRENT_BRANCH': '$SHADOW_BRANCH'."
+    ui_info "To switch to it: git checkout '$SHADOW_BRANCH'"
+    ui_info "To create a new feature branch: git shadow feature start <branch-name>"
+    exit 0
+  fi
+
+  # Case 3: on a public branch with no shadow — create the shadow branch
+  ui_shadow "No shadow branch found for '$CURRENT_BRANCH'. Creating '$SHADOW_BRANCH'..."
+  git checkout -b "$SHADOW_BRANCH"
+  ui_shadow "Switched to new shadow branch '$SHADOW_BRANCH'."
+  exit 0
 fi
+
+# ---------------------------------------------------------------------------
+# Argument provided: standard feature creation
+# ---------------------------------------------------------------------------
 PROJECT_ARG='.'
 FEATURE_NAME="$1"
 LOCAL_BRANCH="${FEATURE_NAME}${LOCAL_SUFFIX}"

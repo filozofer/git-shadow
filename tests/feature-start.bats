@@ -18,9 +18,26 @@ teardown() {
   rm -rf "$TEST_DIR"
 }
 
-@test "feature start exits 1 when no argument given" {
+@test "feature start without arg on shadow branch exits 1" {
+  git checkout -q "develop@local"
   run git shadow feature start
   [ "$status" -eq 1 ]
+  [[ "$output" == *"shadow branch"* ]]
+}
+
+@test "feature start without arg on public branch with existing shadow exits 0 with warning" {
+  run git shadow feature start
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"develop@local"* ]]
+}
+
+@test "feature start without arg on public branch without shadow creates shadow branch" {
+  git branch -d "develop@local"
+  run git shadow feature start
+  [ "$status" -eq 0 ]
+  git show-ref --verify --quiet "refs/heads/develop@local"
+  current="$(git branch --show-current)"
+  [ "$current" = "develop@local" ]
 }
 
 @test "feature start creates the public feature branch" {
