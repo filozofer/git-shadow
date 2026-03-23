@@ -43,21 +43,6 @@ if [[ "$ABORT" -eq 1 ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Validate we are on a shadow branch
-# ---------------------------------------------------------------------------
-CURRENT_BRANCH="$(current_branch)"
-if [[ -z "$CURRENT_BRANCH" ]]; then
-  ui_error "Unable to determine current branch."
-  exit 1
-fi
-if [[ ! "$CURRENT_BRANCH" =~ ${LOCAL_SUFFIX}$ ]]; then
-  ui_error "git shadow feature sync must be run from a shadow branch (ending with '$LOCAL_SUFFIX')."
-  ui_step "Current branch: $CURRENT_BRANCH"
-  exit 1
-fi
-PUBLIC_BRANCH="$(public_branch_from_any "$CURRENT_BRANCH")"
-
-# ---------------------------------------------------------------------------
 # --continue: resume after a manual [MEMORY] conflict resolution
 # ---------------------------------------------------------------------------
 if [[ "$CONTINUE" -eq 1 ]]; then
@@ -66,9 +51,27 @@ if [[ "$CONTINUE" -eq 1 ]]; then
     ui_error "No rebase in progress. Nothing to continue."
     exit 1
   fi
+  # During rebase, HEAD is detached — read the branch name from rebase state
+  CURRENT_BRANCH="$(sed 's|refs/heads/||' "$(git rev-parse --git-dir)/rebase-merge/head-name")"
+  PUBLIC_BRANCH="$(public_branch_from_any "$CURRENT_BRANCH")"
   ui_info "Resuming sync after manual resolution..."
-  GIT_EDITOR=true git rebase --continue
+  GIT_EDITOR=true git rebase --continue || true
   # Fall through to the main loop below if more conflicts remain
+else
+  # ---------------------------------------------------------------------------
+  # Validate we are on a shadow branch
+  # ---------------------------------------------------------------------------
+  CURRENT_BRANCH="$(current_branch)"
+  if [[ -z "$CURRENT_BRANCH" ]]; then
+    ui_error "Unable to determine current branch."
+    exit 1
+  fi
+  if [[ ! "$CURRENT_BRANCH" =~ ${LOCAL_SUFFIX}$ ]]; then
+    ui_error "git shadow feature sync must be run from a shadow branch (ending with '$LOCAL_SUFFIX')."
+    ui_step "Current branch: $CURRENT_BRANCH"
+    exit 1
+  fi
+  PUBLIC_BRANCH="$(public_branch_from_any "$CURRENT_BRANCH")"
 fi
 
 # ---------------------------------------------------------------------------
