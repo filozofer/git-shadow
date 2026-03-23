@@ -108,16 +108,58 @@ fi
 : "${PUBLIC_BRANCH:?}"
 
 # ---------------------------------------------------------------------------
-# --merge mode: single merge with auto-resolution in favour of public branch
+# --merge mode: merge public branch into shadow, with per-file conflict handling
+#   - Conflicted files with NO local comments  → public branch wins (--theirs)
+#   - Conflicted files WITH local comments     → pause for manual resolution
 # ---------------------------------------------------------------------------
 if [[ "$MERGE_MODE" -eq 1 ]]; then
-  if ! git show-ref --verify --quiet "refs/heads/$PUBLIC_BRANCH"; then
-    ui_error "Public branch does not exist: $PUBLIC_BRANCH"
-    exit 1
+  # Only start a fresh merge if not already mid-merge (--continue falls through here)
+  if [[ ! -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]]; then
+    if ! git show-ref --verify --quiet "refs/heads/$PUBLIC_BRANCH"; then
+      ui_error "Public branch does not exist: $PUBLIC_BRANCH"
+      exit 1
+    fi
+    ensure_clean_repo
+    ui_shadow "Merging '$PUBLIC_BRANCH' into '$CURRENT_BRANCH' (--merge mode)..."
+    git merge "$PUBLIC_BRANCH" || true  # continue even if conflicts
   fi
-  ensure_clean_repo
-  ui_shadow "Merging '$PUBLIC_BRANCH' into '$CURRENT_BRANCH' (--merge mode)..."
-  GIT_EDITOR=true git merge -X theirs "$PUBLIC_BRANCH"
+
+  CONFLICTS="$(git diff --name-only --diff-filter=U)"
+
+  if [[ -z "$CONFLICTS" ]]; then
+    # Clean merge or already resolved — commit if still needed
+    if [[ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]]; then
+      GIT_EDITOR=true git merge --continue
+    fi
+    ui_ok "Shadow branch '$CURRENT_BRANCH' is now in sync with '$PUBLIC_BRANCH'."
+    exit 0
+  fi
+
+  # Per-file conflict resolution
+  HAS_MANUAL=0
+  while IFS= read -r file; do
+    # Check if our (shadow) version of the file contains local comment markers
+    if git show ":2:$file" 2>/dev/null | grep -qP "$LOCAL_COMMENT_PATTERN"; then
+      ui_warn "Conflict with local comments: $file"
+      HAS_MANUAL=1
+    else
+      git checkout --theirs -- "$file"
+      git add -- "$file"
+      ui_shadow "Auto-resolved (no local comments): $file"
+    fi
+  done <<< "$CONFLICTS"
+
+  if [[ "$HAS_MANUAL" -eq 1 ]]; then
+    ui_warn "Some conflicted files contain local comments — manual resolution required."
+    ui_info "Resolve each file above, stage it with 'git add', then run:"
+    ui_step "git shadow feature sync --continue"
+    ui_info "To abort:"
+    ui_step "git shadow feature sync --abort"
+    exit 0
+  fi
+
+  # All conflicts resolved automatically
+  GIT_EDITOR=true git merge --continue
   ui_ok "Shadow branch '$CURRENT_BRANCH' is now in sync with '$PUBLIC_BRANCH'."
   exit 0
 fi
