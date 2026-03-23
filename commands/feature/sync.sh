@@ -67,7 +67,7 @@ if [[ "$CONTINUE" -eq 1 ]]; then
     exit 1
   fi
   ui_info "Resuming sync after manual resolution..."
-  git rebase --continue --no-edit
+  GIT_EDITOR=true git rebase --continue
   # Fall through to the main loop below if more conflicts remain
 fi
 
@@ -93,7 +93,7 @@ while [[ -d "$(git rev-parse --git-dir)/rebase-merge" ]]; do
 
   # No conflicts — just continue
   if [[ -z "$CONFLICTS" ]]; then
-    git rebase --continue --no-edit 2>&1 || true
+    GIT_EDITOR=true git rebase --continue 2>&1 || true
     continue
   fi
 
@@ -119,7 +119,7 @@ while [[ -d "$(git rev-parse --git-dir)/rebase-merge" ]]; do
     if git diff --cached --quiet; then
       result="$(git rebase --skip 2>&1 || true)"
     else
-      result="$(git rebase --continue --no-edit 2>&1 || true)"
+      result="$(GIT_EDITOR=true git rebase --continue 2>&1 || true)"
     fi
     echo "$result"
   fi
