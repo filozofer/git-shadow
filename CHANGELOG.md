@@ -8,6 +8,9 @@
   Auto-resolves code conflicts in favour of the public branch; pauses for manual resolution on `[MEMORY]` commits so local AI context is never silently overwritten.
   Supports `--continue` and `--abort` to drive the underlying rebase.
 
+- **`git shadow feature sync --merge`** — alternative sync mode for shared shadow branches (pushed to a remote, where rebase would rewrite history).
+  Merges the public branch into the shadow branch with per-file conflict handling: files without local comment markers are auto-resolved in favour of the public branch; files containing local comments pause for manual resolution so annotations are never silently overwritten.
+
 - **`git shadow feature start` (no argument)** — smart context detection when invoked without a branch name.
   - On a public branch with no existing shadow: creates the shadow branch and switches to it.
   - On a public branch with an existing shadow: warns and prints the checkout command.
