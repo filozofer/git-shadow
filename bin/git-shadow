@@ -56,8 +56,9 @@ Commands:
   doctor
   status [--json]
   completion install
-  feature start <branch>
-  feature publish [--commit] [-m MESSAGE]
+  feature start [<branch>]
+  feature publish [--commit] [-m MESSAGE] [--push]
+  feature sync [--continue | --abort]
   feature finish [--keep-branches] [--no-pull] [--force]
   commit [-m "message"]
   promote <file>

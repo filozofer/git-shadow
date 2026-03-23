@@ -273,6 +273,29 @@ Example of usages :
 
 ---
 
+# Keep in sync
+
+When your colleagues push new commits to the public branch while you are still working on your shadow branch, run:
+
+```bash
+git shadow feature sync
+```
+
+This rebases your `@local` shadow branch onto the updated public branch:
+
+- **Regular code commits** that conflict are auto-resolved in favour of the public branch (their changes win — you can always re-apply yours on top).
+- **`[MEMORY]` commits** that conflict are paused for manual resolution, so your local AI context is never silently overwritten.
+
+```bash
+# After a [MEMORY] conflict — resolve manually, then:
+git shadow feature sync --continue
+
+# To give up and go back:
+git shadow feature sync --abort
+```
+
+---
+
 # Finish a feature
 
 After the MR is merged :
@@ -321,11 +344,16 @@ Work normally on your @local branch
 Publish:
 
 ```bash
-git shadow feature publish --commit -m "feat(auth): user login function"
-git push
+git shadow feature publish --commit -m "feat(auth): user login function" --push
 ```
 
-Finish after your branch has been merge on the main branch :
+If colleagues pushed new commits to the public branch in the meantime:
+
+```bash
+git shadow feature sync
+```
+
+Finish after your branch has been merged on the main branch:
 
 ```bash
 git shadow feature finish
@@ -371,7 +399,7 @@ Git Shadow implements a workflow called the **Shadow Branch Pattern**.
 
 - **Local-only information** : Your team members won’t benefit from your local commits, since that is the purpose of this pattern. Your local reasoning is therefore not directly visible to others, and important insights may still need to be promoted to shared documentation or code when relevant.
 
--  **Conflict management** : Since `@local` branches diverge from public branches, you may encounter merge conflicts when updating your base branch, rebasing, or finishing features. These conflicts are usually straightforward (often limited to comments), but they introduce some maintenance overhead.
+-  **Conflict management** : Since `@local` branches diverge from public branches, you may encounter merge conflicts when updating your base branch or finishing features. `git shadow feature sync` automates most of this — code conflicts are auto-resolved in favour of the public branch, and only `[MEMORY]` conflicts require manual attention.
 
 - **Not always necessary** : Everything Git Shadow does can be achieved manually with Git. Its value lies in automation, consistency, and reduced cognitive load. For simple workflows or small projects, the pattern may be unnecessary.
 
@@ -397,7 +425,7 @@ To run the tests:
    ```
 
 The test suite includes:
-- Individual tests for each subcommand (`feature-start.bats`, `feature-publish.bats`, `feature-finish.bats`, etc.)
+- Individual tests for each subcommand (`feature-start.bats`, `feature-publish.bats`, `feature-sync.bats`, `feature-finish.bats`, etc.)
 - A comprehensive workflow test (`workflow.bats`) that validates the complete feature development cycle
 
 ---
