@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.1] — 2026-03-23
+
+### Added
+
+- **`git shadow feature sync --merge`** — alternative sync mode for shared shadow branches (pushed to a remote, where rebase would rewrite history).
+  Merges the public branch into the shadow branch with per-file conflict handling: files without local comment markers are auto-resolved in favour of the public branch; files containing local comments pause for manual resolution so annotations are never silently overwritten.
+
+### Fixed
+
+- `feature/sync.sh` — `--abort` now correctly handles both rebase-in-progress and merge-in-progress states.
+- `feature/sync.sh` — `--continue` now correctly handles both rebase and merge in-progress states.
+
+---
+
 ## [1.1.0] — 2026-03-23
 
 ### Added
