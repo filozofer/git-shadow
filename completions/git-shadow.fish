@@ -14,13 +14,14 @@ complete -c git-shadow -f
 # Top-level commands
 # ---------------------------------------------------------------------------
 
-set -l top_cmds version install-hooks doctor status commit check-local-comments feature config completion
+set -l top_cmds version install-hooks doctor status commit promote check-local-comments feature config completion
 
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a version              -d "show the current version"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a install-hooks        -d "install pre-commit and pre-push git hooks"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a doctor               -d "run diagnostic checks on the environment"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a status               -d "show shadow/public branch state"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a commit               -d "create a shadow-aware commit"
+complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a promote              -d "promote a local @local commit to the public branch"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a check-local-comments -d "check staged files for local comment markers"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a feature              -d "manage feature branch lifecycle"
 complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a config               -d "manage git-shadow configuration"

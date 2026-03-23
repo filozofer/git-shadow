@@ -37,6 +37,7 @@ _git_shadow_commands() {
     'doctor:run diagnostic checks on the environment and repository'
     'status:show the current shadow/public branch state'
     'commit:create a shadow-aware commit (separates code from local comments)'
+    'promote:promote a local @local commit to the public branch'
     'check-local-comments:check staged files for local comment markers'
     'feature:manage the feature branch lifecycle (start / publish / finish)'
     'config:manage git-shadow configuration'
