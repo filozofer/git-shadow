@@ -78,6 +78,7 @@ _git_shadow_feature_subcommands() {
     'start:create a new shadow/public feature branch pair'
     'publish:cherry-pick clean commits to the public branch'
     'finish:merge and finalize the feature, then clean up branches'
+    'sync:rebase the shadow branch onto its public counterpart'
   )
   _describe 'subcommand' subcommands
 }

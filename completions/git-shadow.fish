@@ -31,11 +31,14 @@ complete -c git-shadow -n "not __fish_seen_subcommand_from $top_cmds" -a complet
 # feature subcommands and flags
 # ---------------------------------------------------------------------------
 
-set -l feature_subcmds start publish finish
+set -l feature_subcmds start publish finish sync
 
 complete -c git-shadow -n "__fish_seen_subcommand_from feature; and not __fish_seen_subcommand_from $feature_subcmds" -a start   -d "create a new shadow/public feature branch pair"
 complete -c git-shadow -n "__fish_seen_subcommand_from feature; and not __fish_seen_subcommand_from $feature_subcmds" -a publish -d "cherry-pick clean commits to the public branch"
 complete -c git-shadow -n "__fish_seen_subcommand_from feature; and not __fish_seen_subcommand_from $feature_subcmds" -a finish  -d "merge and finalize the feature, then clean up"
+complete -c git-shadow -n "__fish_seen_subcommand_from feature; and not __fish_seen_subcommand_from $feature_subcmds" -a sync    -d "rebase the shadow branch onto its public counterpart"
+complete -c git-shadow -n "__fish_seen_subcommand_from feature; and __fish_seen_subcommand_from sync" -l continue -d "resume after manual conflict resolution"
+complete -c git-shadow -n "__fish_seen_subcommand_from feature; and __fish_seen_subcommand_from sync" -l abort    -d "abort the sync rebase"
 
 complete -c git-shadow -n "__fish_seen_subcommand_from feature; and __fish_seen_subcommand_from publish" -l commit       -d "commit staged changes before publishing"
 complete -c git-shadow -n "__fish_seen_subcommand_from feature; and __fish_seen_subcommand_from publish" -s m -r         -d "commit message"

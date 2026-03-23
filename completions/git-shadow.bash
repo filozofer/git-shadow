@@ -30,7 +30,7 @@ _git_shadow() {
   case "$cmd" in
     feature)
       if [[ $pos -eq 1 ]]; then
-        COMPREPLY=($(compgen -W "start publish finish" -- "$cur"))
+        COMPREPLY=($(compgen -W "start publish finish sync" -- "$cur"))
       else
         case "$subcmd" in
           publish) COMPREPLY=($(compgen -W "--commit -m" -- "$cur")) ;;
