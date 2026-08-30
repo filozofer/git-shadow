@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <img src="assets/logo/git-shadow-logo.svg" alt="git shadow" width="320" />
 </p>
@@ -420,8 +422,7 @@ To run the tests:
 
 2. Run the tests:
    ```bash
-   cd tests
-   ./run-tests.sh
+   ./tests/run-tests.sh
    ```
 
 The test suite includes:
